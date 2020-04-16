@@ -1,13 +1,16 @@
-all: solver
+EXEC = solver
+SRC  = $(wildcard *.c)
+OBJ  = $(SRC:.c=.o)
 
-solver: solver.o 
-	gcc -o solver solver.o
+CC	   = gcc
+CFLAGS = -Wall -Wextra -std=c99 -O
 
+all: $(EXEC) clean
 
-sover.o: solver.c 
-	 gcc -o solver.o -c solver.c -Wall -O
+$(EXEC): $(OBJ)
 
-clean: rm -f *.o core
+clean:
+	rm -f $(OBJ)
 
 mrproper: clean
-	  rm -f main
+	rm -f $(EXEC)
