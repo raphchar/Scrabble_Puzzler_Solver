@@ -1,6 +1,8 @@
 #ifndef TST_H
 #define TST_H
 
+#include <stdlib.h>
+
 /**
  * Represents a node of a Ternary Search Trie
  */
@@ -18,7 +20,7 @@ struct TSTNode
  *
  * letter: the letter to put in the new node
  *
- * return: a pointer to the new node
+ * return: A pointer to the new node
  */
 struct TSTNode *newNode(char letter);
 
