@@ -32,7 +32,7 @@ struct TSTNode *newNode(char letter);
  * root: A pointer to the root node of the TST
  * word: A string representing the word to insert
  */
-void insertTST(struct TSTNode *root, char *word);
+void insertTST(struct TSTNode **root, char *word);
 
 /**
  * Searches a given word in a given TST
@@ -40,8 +40,9 @@ void insertTST(struct TSTNode *root, char *word);
  * root: A pointer to the root node of the TST
  * word: A string representing the word to insert
  *
- * return: 1 if the word is in the TST, 0 otherwise
+ * return: A pointer to the node at the end of the word
+ * or NULL is the word is not in the TST
  */
-unsigned searchTST(struct TSTNode *root, char *word);
+struct TSTNode *searchTST(struct TSTNode *root, char *word);
 
 #endif // TST_H
