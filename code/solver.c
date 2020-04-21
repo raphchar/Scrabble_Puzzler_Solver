@@ -6,16 +6,21 @@
 
 */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "sort.h"
+#include "tst.h"
+
 #define LINELENGTH 128
 
 /**
- * Reads the file from the given path and returns an array of letter
+ * Reads the given path and inserts the words in the TST.
+ * Returns the number of words read.
  */
-size_t readLetters(const char *path, char *letters)
+size_t readWords(const char *path, TSTNode *root)
 {
 	// Opens file
 	FILE *file = fopen(path, "r");
@@ -23,7 +28,7 @@ size_t readLetters(const char *path, char *letters)
 	// If open fails
 	if (file == NULL)
 	{
-		printf("ERROR: Could not open the letters file.\n");
+		fprintf(stderr, "ERROR: Could not open the words file.\n");
 		exit(-1);
 	}
 
@@ -33,11 +38,13 @@ size_t readLetters(const char *path, char *letters)
 	// Reads LINELENGTH char for each line
 	while (fgets(line, LINELENGTH, file))
 	{
-		// Allocate memory
-		letters = realloc(letters, (counter + 1) * sizeof(char));
+		for (int i = 0; line[i]; i++)
+		{
+			line[i] =tolower(line[i]);
+		}
 
-		// Copies the read letter into the array
-		letters[counter] = line[0];
+		// Inserts in TST
+		insertTST(root, line);
 
 		// Increments counter
 		counter++;
@@ -47,9 +54,10 @@ size_t readLetters(const char *path, char *letters)
 }
 
 /**
- * Reads the file from the given path and returns an array of score
+ * Reads the given path and inserts the letters in the given array.
+ * Returns the number of letters read.
  */
-size_t readScores(const char *path, int *scores)
+size_t readLetters(const char *path, char **letters)
 {
 	// Opens file
 	FILE *file = fopen(path, "r");
@@ -57,7 +65,7 @@ size_t readScores(const char *path, int *scores)
 	// If open fails
 	if (file == NULL)
 	{
-		printf("ERROR: Could not open the score file.\n");
+		fprintf(stderr, "ERROR: Could not open the letters file.\n");
 		exit(-1);
 	}
 
@@ -68,10 +76,45 @@ size_t readScores(const char *path, int *scores)
 	while (fgets(line, LINELENGTH, file))
 	{
 		// Allocate memory
-		scores = realloc(scores, (counter + 1) * sizeof(int));
+		*letters = realloc(*letters, (counter + 1) * sizeof(char));
 
 		// Copies the read letter into the array
-		scores[counter] = atoi(line);
+		(*letters)[counter] = tolower(line[0]);
+
+		// Increments counter
+		counter++;
+	}
+
+	return counter;
+}
+
+/**
+ * Reads the given path and inserts the scores in the given array.
+ * Returns the number of scores read.
+ */
+size_t readScores(const char *path, int **scores)
+{
+	// Opens file
+	FILE *file = fopen(path, "r");
+
+	// If open fails
+	if (file == NULL)
+	{
+		fprintf(stderr, "ERROR: Could not open the scores file.\n");
+		exit(-1);
+	}
+
+	char line[LINELENGTH];
+	size_t counter = 0;
+
+	// Reads LINELENGTH char for each line
+	while (fgets(line, LINELENGTH, file))
+	{
+		// Allocate memory
+		*scores = realloc(*scores, (counter + 1) * sizeof(int));
+
+		// Copies the read letter into the array
+		(*scores)[counter] = atoi(line);
 
 		// Increments counter
 		counter++;
@@ -82,26 +125,45 @@ size_t readScores(const char *path, int *scores)
 
 int main(int argc, char const *argv[])
 {
+	//
+	// Arguments parsing
+	//
 	if (argc != 4)
 	{
-		printf("ERROR: Wrong number of arguments.\n");
+		fprintf(stderr, "ERROR: Wrong number of arguments.\n");
 		exit(-1);
 	}
 
-	// const char *pathToWords = argv[1];
+	const char *pathToWords = argv[1];
 	const char *pathToLetters = argv[2];
 	const char *pathToScores = argv[3];
 
+	// Reads words
+	TSTNode *root = NULL;
+	size_t nbWords = readWords(pathToWords, root);
+	printf("%zu words found\n", nbWords);
+
 	// Reads letters
 	char *letters = NULL;
-	size_t nbLetters = readLetters(pathToLetters, letters);
-	printf("Letters : %s\n", letters);
-	printf("NB Letters : %zu\n", nbLetters);
+	size_t nbLetters = readLetters(pathToLetters, &letters);
+	printf("%zu letters found\n", nbLetters);
+	// printf("LETTERS BEFORE : %s\n", letters);
 
 	// Reads scores
 	int *scores = NULL;
-	size_t nbScores = readScores(pathToScores, scores);
-	printf("NB Scores : %zu\n", nbScores);
+	size_t nbScores = readScores(pathToScores, &scores);
+	printf("%zu scores found\n", nbScores);
+
+	if (nbScores != nbLetters)
+	{
+		fprintf(stderr, "ERROR: Letters and scores files don't have the same size.");
+		exit(-1);
+	}
+
+	// Sorts the letter according to the scores
+	// quicksort(scores, letters, 0, nbScores - 1);
+
+	// printf("LETTERS AFTER : %s\n", letters);
 
 	return 0;
 }

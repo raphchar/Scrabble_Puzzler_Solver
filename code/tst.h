@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+typedef struct TSTNode TSTNode;
+
 /**
  * Represents a node of a Ternary Search Trie
  */
