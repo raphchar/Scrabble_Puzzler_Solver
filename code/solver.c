@@ -10,10 +10,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LINELENGTH 128
+
 /**
  * Reads the file from the given path and returns an array of letter
  */
-char *readLetters(const char *path)
+size_t readLetters(const char *path, char *letters)
 {
 	// Opens file
 	FILE *file = fopen(path, "r");
@@ -25,16 +27,14 @@ char *readLetters(const char *path)
 		exit(-1);
 	}
 
-	size_t lineLength = 4;
-	char line[lineLength];
-	char *letters = NULL;
-	int counter = 0;
+	char line[LINELENGTH];
+	size_t counter = 0;
 
-	// Reads 1 char for each line
-	while (fgets(line, lineLength, file))
+	// Reads LINELENGTH char for each line
+	while (fgets(line, LINELENGTH, file))
 	{
 		// Allocate memory
-		letters = realloc(letters, (counter+1) * sizeof(char));
+		letters = realloc(letters, (counter + 1) * sizeof(char));
 
 		// Copies the read letter into the array
 		letters[counter] = line[0];
@@ -43,7 +43,41 @@ char *readLetters(const char *path)
 		counter++;
 	}
 
-	return letters;
+	return counter;
+}
+
+/**
+ * Reads the file from the given path and returns an array of score
+ */
+size_t readScores(const char *path, int *scores)
+{
+	// Opens file
+	FILE *file = fopen(path, "r");
+
+	// If open fails
+	if (file == NULL)
+	{
+		printf("ERROR: Could not open the score file.\n");
+		exit(-1);
+	}
+
+	char line[LINELENGTH];
+	size_t counter = 0;
+
+	// Reads LINELENGTH char for each line
+	while (fgets(line, LINELENGTH, file))
+	{
+		// Allocate memory
+		scores = realloc(scores, (counter + 1) * sizeof(int));
+
+		// Copies the read letter into the array
+		scores[counter] = atoi(line);
+
+		// Increments counter
+		counter++;
+	}
+
+	return counter;
 }
 
 int main(int argc, char const *argv[])
@@ -56,11 +90,18 @@ int main(int argc, char const *argv[])
 
 	// const char *pathToWords = argv[1];
 	const char *pathToLetters = argv[2];
-	// const char *pathToScores = argv[3];
+	const char *pathToScores = argv[3];
 
-	char *letters = readLetters(pathToLetters);
-
+	// Reads letters
+	char *letters = NULL;
+	size_t nbLetters = readLetters(pathToLetters, letters);
 	printf("Letters : %s\n", letters);
+	printf("NB Letters : %zu\n", nbLetters);
+
+	// Reads scores
+	int *scores = NULL;
+	size_t nbScores = readScores(pathToScores, scores);
+	printf("NB Scores : %zu\n", nbScores);
 
 	return 0;
 }
