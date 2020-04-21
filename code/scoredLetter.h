@@ -16,8 +16,8 @@ struct ScoredLetter
  */
 struct ScoredLetter newScoredLetter(char letter, int score);
 
-char *print(ScoredLetter *scoredLetters);
+char *print(ScoredLetter *scoredLetters, size_t nbScoredLetters);
 
-int value(ScoredLetter *scoredLetters);
+int value(ScoredLetter *scoredLetters, size_t nbScoredLetters);
 
 #endif // SCORED_LETTER_H
