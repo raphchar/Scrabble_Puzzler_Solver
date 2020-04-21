@@ -1,13 +1,5 @@
 #include "sort.h"
 
-struct ScoredLetter newScoredLetter(char letter, int score)
-{
-    struct ScoredLetter *newElement = malloc(sizeof(struct ScoredLetter));
-    newElement->letter = letter;
-    newElement->score = score;
-    return *newElement;
-}
-
 /**
  * Swaps the ith and the jth element of the ScoredLetter's array
  *
