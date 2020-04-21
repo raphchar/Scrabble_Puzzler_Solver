@@ -9,9 +9,9 @@
  */
 void swap(struct ScoredLetter *array, int i, int j)
 {
-    struct ScoredLetter temp = array[i];
+    struct ScoredLetter tmp = array[i];
     array[i] = array[j];
-    array[j] = temp;
+    array[j] = tmp;
 }
 
 void quicksort(struct ScoredLetter *scoredletters,
@@ -32,11 +32,11 @@ void quicksort(struct ScoredLetter *scoredletters,
 
     while (1)
     {
-        // From lowerBound, finds the first element >= pivot
+        // From lowerBound, finds the first element <= pivot
         while (scoredletters[++i].score > pivot)
             ;
 
-        // From upperBound, finds the first element <= pivot
+        // From upperBound, finds the first element >= pivot
         while (pivot > scoredletters[--j].score)
         {
             if (j == lowerBound)
@@ -88,7 +88,7 @@ void quicksort(struct ScoredLetter *scoredletters,
 
     // Moves all same right occurences from end to adjacent to ith element
     i = i + 1;
-    for (int k = upperBound; k > q; k--, i++)
+    for (int k = upperBound - 1; k > q; k--, i++)
     {
         // Swap elements k and i
         swap(scoredletters, k, i);
