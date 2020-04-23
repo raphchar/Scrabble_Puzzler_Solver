@@ -38,7 +38,7 @@ void insertTST(struct TSTNode **root, char *word)
         if (*(word + 1) == '\0')
         {
             // Sets end of word
-            (*root)->endOfWord = 1;
+            (*root)->endOfWord += 1;
         }
         else
         {
