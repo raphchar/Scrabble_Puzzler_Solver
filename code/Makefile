@@ -3,7 +3,7 @@ SRC  = $(wildcard *.c)
 OBJ  = $(SRC:.c=.o)
 
 CC	   = gcc
-CFLAGS = -Wall -Wextra -std=c99 -O
+CFLAGS = -Wall -Wextra -std=c99 -O -g
 
 all: $(EXEC) clean
 
