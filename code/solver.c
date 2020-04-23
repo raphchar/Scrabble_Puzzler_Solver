@@ -144,7 +144,7 @@ int indexOf(ScoredLetter *array, ScoredLetter letter)
 {
 	for (int i = 0; array[i].letter != '\0'; i++)
 	{
-		if (array[i].letter == letter.letter)
+		if (array[i].letter == letter.letter && array[i].score == letter.score)
 		{
 			return i;
 		}
@@ -232,7 +232,7 @@ void printSolutions(ScoredLetter ***solutions)
 			{
 				score += value(solutions[i][j]);
 			}
-			if (j != 0)
+			if (j != 0 && solutions[i][j][0].letter != '\0')
 			{
 				printf(" ");
 			}
@@ -284,22 +284,19 @@ void addFirst(ScoredLetter ***solutions, ScoredLetter letter)
 {
 	for (int i = 0; solutions[i]; i++)
 	{
-		for (int j = 0; solutions[i][j]; j++)
+		int length = 0;
+		for (int k = 0; solutions[i][0][k].letter != '\0'; k++)
 		{
-			int length = 0;
-			for (int k = 0; solutions[i][j][k].letter != '\0'; k++)
-			{
-				length++;
-			}
 			length++;
-
-			solutions[i][j] = realloc(solutions[i][j], (++length) * sizeof(ScoredLetter));
-			for (int k = length - 1; k > 0; k--)
-			{
-				solutions[i][j][k] = solutions[i][j][k - 1];
-			}
-			solutions[i][j][0] = letter;
 		}
+		length++;
+
+		solutions[i][0] = realloc(solutions[i][0], (++length) * sizeof(ScoredLetter));
+		for (int k = length - 1; k > 0; k--)
+		{
+			solutions[i][0][k] = solutions[i][0][k - 1];
+		}
+		solutions[i][0][0] = letter;
 	}
 }
 
@@ -333,7 +330,7 @@ ScoredLetter **concat(ScoredLetter **a, ScoredLetter **b)
 	return result;
 }
 
-ScoredLetter ***mergeSolutions(ScoredLetter ***solutions, ScoredLetter ***additions, int index)
+ScoredLetter ***mergeSolutions(ScoredLetter ***solutions, ScoredLetter ***additions)
 {
 	int nbSolutions;
 	for (nbSolutions = 0; solutions[nbSolutions]; nbSolutions++)
@@ -343,28 +340,21 @@ ScoredLetter ***mergeSolutions(ScoredLetter ***solutions, ScoredLetter ***additi
 	for (nbAdditions = 0; additions[nbAdditions]; nbAdditions++)
 		;
 
-	ScoredLetter ***result = malloc((nbSolutions + nbAdditions) * sizeof(ScoredLetter **));
+	ScoredLetter ***result = malloc((nbSolutions * nbAdditions + 1) * sizeof(ScoredLetter **));
 
 	for (int i = 0; i < nbSolutions; i++)
 	{
 		for (int j = 0; j < nbAdditions; j++)
 		{
-			if (i == index)
-			{
-				result[nbAdditions * i + j] = concat(solutions[i], additions[j]);
-			}
-			else
-			{
-				result[nbAdditions * i + j] = solutions[i];
-			}
+			result[nbAdditions * i + j] = concat(solutions[i], additions[j]);
 		}
 	}
-	result[nbSolutions + nbAdditions - 1] = NULL;
+	result[nbSolutions * nbAdditions] = NULL;
 
 	return result;
 }
 
-ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
+ScoredLetter ***solverAux(TSTNode *dict, TSTNode *root, ScoredLetter *letters, int depth)
 {
 	// Solutions: Array of Array of Array of ScoredLetter
 	// => Set of set of words
@@ -414,10 +404,12 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 			// End of a word
 			if (currentNode->endOfWord)
 			{
+				int tmp = bestScore;
+
 				if (!solutions)
 				{
 					// printf("\t\t\t\tEND OF WORD\n");
-					currentNode->endOfWord = 0;
+					currentNode->endOfWord -= 1;
 
 					bestScore = currentScoredLetter.score;
 
@@ -433,7 +425,7 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 				else if (bestScore < currentScoredLetter.score)
 				{
 					// printf("\t\t\t\tEND OF WORD\n");
-					currentNode->endOfWord = 0;
+					currentNode->endOfWord -= 1;
 
 					bestScore = currentScoredLetter.score;
 
@@ -442,7 +434,7 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 				else if (bestScore == currentScoredLetter.score)
 				{
 					// printf("\t\t\t\tEND OF WORD\n");
-					currentNode->endOfWord = 0;
+					currentNode->endOfWord -= 1;
 
 					solutions = realloc(solutions, (++nbSolutions) * sizeof(ScoredLetter **));
 					solutions[nbSolutions - 2] = malloc(2 * sizeof(ScoredLetter *));
@@ -452,6 +444,49 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 					solutions[nbSolutions - 2][1] = NULL;
 					solutions[nbSolutions - 1] = NULL;
 				}
+
+				if (tmp < bestScore)
+				{
+					//* HERE
+					ScoredLetter *subLetters = NULL;
+
+					// subLetters = removeElements(letters, &currentScoredLetter);
+					subLetters = removeElementAt(letters, i);
+
+					// for (int k = 0; k < depth; k++)
+					// {
+					// 	printf("\t");
+					// }
+					// printf("Remaining Letters [");
+					// print(subLetters);
+					// printf("]\n");
+
+					// for (int k = 0; k < depth; k++)
+					// {
+					// 	printf("\t");
+					// }
+					// printf("############################# > \n");
+
+					ScoredLetter ***subSolutions = solverAux(root, root, subLetters, depth + 1);
+
+					if (subSolutions)
+					{
+						// printSolutions(solutions);
+						// printf(" x ");
+						// printSolutions(subSolutions);
+						// printf(" = ");
+						// printSolutions(mergeSolutions(solutions, subSolutions, j));
+						solutions = mergeSolutions(solutions, subSolutions);
+					}
+
+					// free(subsubLetters);
+
+					// for (int k = 0; k < depth; k++)
+					// {
+					// 	printf("\t");
+					// }
+					// printf(" < #############################\n");
+				}
 			}
 			else
 			{
@@ -460,10 +495,14 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 				{
 					ScoredLetter *subLetters = removeElementAt(letters, i);
 
-					ScoredLetter ***auxSolutions = solverAux(subDict, subLetters, depth + 1);
+					ScoredLetter ***auxSolutions = solverAux(subDict, root, subLetters, depth + 1);
 
 					if (auxSolutions)
 					{
+						for (nbSolutions = 0; auxSolutions[nbSolutions]; nbSolutions++)
+							;
+						nbSolutions++;
+
 						// for (int k = 0; k < depth; k++)
 						// {
 						// 	printf("\t");
@@ -474,17 +513,43 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 						if (!solutions)
 						{
 							solutions = copySolutions(auxSolutions);
-							bestSolutions = valueSolutions(solutions);
 
 							addFirst(solutions, currentScoredLetter);
+
+							bestSolutions = valueSolutions(solutions);
 						}
 						else if (bestSolutions < valueSolutions(auxSolutions))
 						{
 							solutions = copySolutions(auxSolutions);
-							bestSolutions = valueSolutions(solutions);
 
 							addFirst(solutions, currentScoredLetter);
+
+							bestSolutions = valueSolutions(solutions);
 						}
+
+						// for (int k = 0; k < depth; k++)
+						// {
+						// 	printf("\t");
+						// }
+						// printf("# %d => ", nbSolutions);
+						// printSolutions(solutions);
+
+						if (bestSolutions == 0)
+						{
+							solutions = realloc(solutions, (++nbSolutions) * sizeof(ScoredLetter **));
+							solutions[nbSolutions - 2] = malloc(2 * sizeof(ScoredLetter *));
+							solutions[nbSolutions - 2][0] = malloc(sizeof(ScoredLetter));
+							solutions[nbSolutions - 2][0][0] = NULLLETTER;
+							solutions[nbSolutions - 2][1] = NULL;
+							solutions[nbSolutions - 1] = NULL;
+						}
+
+						// for (int k = 0; k < depth; k++)
+						// {
+						// 	printf("\t");
+						// }
+						// printf("# %d => ", nbSolutions);
+						// printSolutions(solutions);
 
 						// for (int k = 0; k < depth; k++)
 						// {
@@ -500,46 +565,10 @@ ScoredLetter ***solverAux(TSTNode *dict, ScoredLetter *letters, int depth)
 						// printf("# ");
 						// printSolutions(solutions);
 
-						for (int j = 0; auxSolutions[j]; j++)
-						{
-							ScoredLetter *subsubLetters = NULL;
+						// for (int j = 0; auxSolutions[j]; j++)
+						// {
 
-							subsubLetters = removeElements(subLetters, auxSolutions[j][0]);
-
-							// for (int k = 0; k < depth; k++)
-							// {
-							// 	printf("\t");
-							// }
-							// printf("Remaining Letters [");
-							// print(subsubLetters);
-							// printf("]\n");
-
-							// for (int k = 0; k < depth; k++)
-							// {
-							// 	printf("\t");
-							// }
-							// printf("############################# > \n");
-
-							ScoredLetter ***subSolutions = solverAux(dict, subsubLetters, depth + 1);
-
-							if (subSolutions)
-							{
-								// printSolutions(solutions);
-								// printf(" x ");
-								// printSolutions(subSolutions);
-								// printf(" = ");
-								// printSolutions(mergeSolutions(solutions, subSolutions, j));
-								solutions = mergeSolutions(solutions, subSolutions, j);
-							}
-
-							// free(subsubLetters);
-
-							// for (int k = 0; k < depth; k++)
-							// {
-							// 	printf("\t");
-							// }
-							// printf(" < #############################\n");
-						}
+						// }
 
 						// for (int k = 0; k < depth; k++)
 						// {
@@ -578,7 +607,7 @@ void solver(TSTNode *dict, ScoredLetter *letters)
 {
 	// int resultScore = solverAux(dict, nbLetters, letters, 0);
 	// ScoredLetter *result = solverAux(dict, nbLetters, letters, 0);
-	ScoredLetter ***solutions = solverAux(dict, letters, 0);
+	ScoredLetter ***solutions = solverAux(dict, dict, letters, 0);
 
 	printSolutions(solutions);
 	// printf("Score = %d\n", value(result, ));
@@ -602,7 +631,8 @@ int main(int argc, char const *argv[])
 
 	// Reads words
 	TSTNode *dict = NULL;
-	int nbWords = readWords(pathToWords, &dict);
+	readWords(pathToWords, &dict);
+	// int nbWords = readWords(pathToWords, &dict);
 	// printf("%zu words found\n", nbWords);
 
 	// Reads letters
