@@ -216,7 +216,7 @@ void printSolutions(ScoredLetter ***solutions)
 	}
 
 	int score = 0;
-	printf("[");
+	printf("[ ");
 
 	for (int i = 0; solutions[i]; i++)
 	{
@@ -224,7 +224,7 @@ void printSolutions(ScoredLetter ***solutions)
 		{
 			printf(" ");
 		}
-		printf("[");
+		printf("[ ");
 
 		for (int j = 0; solutions[i][j]; j++)
 		{
@@ -239,10 +239,10 @@ void printSolutions(ScoredLetter ***solutions)
 			print(solutions[i][j]);
 		}
 
-		printf("]");
+		printf(" ]");
 	}
 
-	printf("] : %d\n", score);
+	printf(" ] : %d\n", score);
 }
 
 ScoredLetter ***copySolutions(ScoredLetter ***solutions)
