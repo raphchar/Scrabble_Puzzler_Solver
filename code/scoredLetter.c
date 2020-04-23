@@ -8,25 +8,18 @@ struct ScoredLetter newScoredLetter(char letter, int score)
     return *newElement;
 }
 
-char *print(ScoredLetter *scoredLetters, size_t nbScoredLetters)
+void print(ScoredLetter *scoredLetters)
 {
-    char *word = malloc(nbScoredLetters * sizeof(char));
-
-    if (word)
+    for (size_t i = 0; scoredLetters[i].letter != '\0'; i++)
     {
-        for (size_t i = 0; i < nbScoredLetters; i++)
-        {
-            word[i] = scoredLetters[i].letter;
-        }
+        printf("%c", scoredLetters[i].letter);
     }
-
-    return word;
 }
 
-int value(ScoredLetter *scoredLetters, size_t nbScoredLetters)
+int value(ScoredLetter *scoredLetters)
 {
     int sum = 0;
-    for (size_t i = 0; i < nbScoredLetters; i++)
+    for (size_t i = 0; scoredLetters[i].letter != '\0'; i++)
     {
         sum += scoredLetters[i].score;
     }

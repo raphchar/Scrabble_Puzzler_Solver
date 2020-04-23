@@ -1,7 +1,10 @@
 #ifndef SCORED_LETTER_H
 #define SCORED_LETTER_H
 
+#include <stdio.h>
 #include <stdlib.h>
+
+#define NULLLETTER newScoredLetter('\0', 0);
 
 typedef struct ScoredLetter ScoredLetter;
 
@@ -16,8 +19,8 @@ struct ScoredLetter
  */
 struct ScoredLetter newScoredLetter(char letter, int score);
 
-char *print(ScoredLetter *scoredLetters, size_t nbScoredLetters);
+void print(ScoredLetter *scoredLetters);
 
-int value(ScoredLetter *scoredLetters, size_t nbScoredLetters);
+int value(ScoredLetter *scoredLetters);
 
 #endif // SCORED_LETTER_H
