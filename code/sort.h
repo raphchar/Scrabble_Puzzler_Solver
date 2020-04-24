@@ -1,20 +1,22 @@
+/**
+ * sort.h
+ *
+ * Header of the implémentaion of a quicksort over an array of ScoredLetter
+ *
+ */
+
 #ifndef SORT_H
 #define SORT_H
 
 #include "scoredLetter.h"
 
 /**
- * Sorts the array of letter given an array of score
+ * Sorts the array of ScoredLetter
  *
- * Applies the QuickSort algorithm to the scoreArray and reflects the change
- * to the letterArray
- *
- * scoreArray: An array of integer representing the letters' scores
- * letterArray: An array of letter
+ * scoredLetters: An array of ScoredLetter
  * lowerBound: The left most index of the considered partition
  * upperBound: The right most index of the considered partition
  */
-void quicksort(struct ScoredLetter *scoredletters,
-               int lowerBound, int upperBound);
+void quicksort(ScoredString scoredLetters, int lowerBound, int upperBound);
 
 #endif // SORT_H

@@ -1,3 +1,10 @@
+/**
+ * sort.c
+ *
+ * Implémentaion of a quicksort over an array of ScoredLetter
+ *
+ */
+
 #include "sort.h"
 
 /**
@@ -7,15 +14,14 @@
  * i: An index of the array
  * j: An index of the array
  */
-void swap(struct ScoredLetter *array, int i, int j)
+void swap(ScoredString array, int i, int j)
 {
     struct ScoredLetter tmp = array[i];
     array[i] = array[j];
     array[j] = tmp;
 }
 
-void quicksort(struct ScoredLetter *scoredletters,
-               int lowerBound, int upperBound)
+void quicksort(ScoredString scoredLetters, int lowerBound, int upperBound)
 {
     if (upperBound <= lowerBound)
     {
@@ -28,16 +34,16 @@ void quicksort(struct ScoredLetter *scoredletters,
     int q = upperBound;
 
     // Sets pivot as the last element of the partition
-    int pivot = scoredletters[upperBound].score;
+    int pivot = scoredLetters[upperBound].score;
 
     while (1)
     {
         // From lowerBound, finds the first element <= pivot
-        while (scoredletters[++i].score > pivot)
+        while (scoredLetters[++i].score > pivot)
             ;
 
         // From upperBound, finds the first element >= pivot
-        while (pivot > scoredletters[--j].score)
+        while (pivot > scoredLetters[--j].score)
         {
             if (j == lowerBound)
             {
@@ -52,38 +58,38 @@ void quicksort(struct ScoredLetter *scoredletters,
         }
 
         // Swap elements i and j
-        swap(scoredletters, i, j);
+        swap(scoredLetters, i, j);
 
         // Moves all same left occurences of pivot to beginning of partition
         // Counts occurences with p
-        if (scoredletters[i].score == pivot)
+        if (scoredLetters[i].score == pivot)
         {
             p++;
 
             // Swap elements p and i
-            swap(scoredletters, p, i);
+            swap(scoredLetters, p, i);
         }
 
         // Moves all same right occurences of pivot to end of partition
         // Counts occurences with q
-        if (scoredletters[j].score == pivot)
+        if (scoredLetters[j].score == pivot)
         {
             q--;
 
             // Swap elements q and j
-            swap(scoredletters, q, j);
+            swap(scoredLetters, q, j);
         }
     }
 
     // Swap elements i and upperBound
-    swap(scoredletters, i, upperBound);
+    swap(scoredLetters, i, upperBound);
 
     // Moves all same left occurences from beginning to adjacent to ith element
     j = i - 1;
     for (int k = lowerBound; k < p; k++, j--)
     {
         // Swap elements k and j
-        swap(scoredletters, k, j);
+        swap(scoredLetters, k, j);
     }
 
     // Moves all same right occurences from end to adjacent to ith element
@@ -91,12 +97,12 @@ void quicksort(struct ScoredLetter *scoredletters,
     for (int k = upperBound - 1; k > q; k--, i++)
     {
         // Swap elements k and i
-        swap(scoredletters, k, i);
+        swap(scoredLetters, k, i);
     }
 
     // Recursive call for the left partition
-    quicksort(scoredletters, lowerBound, j);
+    quicksort(scoredLetters, lowerBound, j);
 
     // Recursive call for the right partition
-    quicksort(scoredletters, i, upperBound);
+    quicksort(scoredLetters, i, upperBound);
 }
