@@ -258,12 +258,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 	{
 		ScoredLetter currentScoredLetter = letters[i];
 
-		// for (int k = 0; k < depth; k++)
-		// {
-		// 	printf("\t");
-		// }
-		// printf("CURREN LETTER : %c\n", currentScoredLetter.letter);
-
 		char currentLetter[2];
 		currentLetter[0] = currentScoredLetter.letter;
 		currentLetter[1] = '\0';
@@ -301,20 +295,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				emptyList[0] = emptySolution;
 				emptyList[1] = NULL;
 
-				// if (subSolutions)
-				// {
-				// 	displaySolutions(subSolutions);
-				// 	for (int j = 0; subSolutions[j]; j++)
-				// 	{
-				// 		subSolutions[j] = concatenate(subSolutions[j], emptySolution);
-				// 	}
-				// 	displaySolutions(subSolutions);
-				// }
-				// else
-				// {
-				// 	subSolutions = emptySolution;
-				// }
-
 				int subScore = scoreOfSolutions(subSolutions);
 				int score = currentScoredLetter.score + subScore;
 
@@ -322,12 +302,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				{
 					subSolutions = emptyList;
 				}
-
-				// for (int k = 0; k < depth; k++)
-				// {
-				// 	printf("\t");
-				// }
-				// printf("%d <= %d\n", bestScoreSolutions, score);
 
 				if (bestScoreSolutions <= score)
 				{
@@ -422,18 +396,7 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				}
 			}
 		}
-		// printf("-----------------------------------------------------------\n");
 	}
-
-	// if (solutions)
-	// {
-	// 	for (int k = 0; k < depth; k++)
-	// 	{
-	// 		printf("\t");
-	// 	}
-	// 	printf("§ ");
-	// 	displaySolutions(solutions);
-	// }
 
 	return solutions;
 }
