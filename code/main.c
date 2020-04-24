@@ -1,16 +1,16 @@
-/*
-	Programming Techniques - Project 1
-
-	main.c
-
-
-*/
+/**
+ * Programming Techniques - Project 1
+ *
+ * main.c
+ *
+ */
 
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "scoredLetter.h"
 #include "sort.h"
 #include "tst.h"
 
@@ -20,7 +20,7 @@
  * Reads the given path and inserts the words in the TST.
  * Returns the number of words read.
  */
-int readWords(const char *path, TSTNode **root)
+int readWords(const char *path, TSTNode **root, int nbRepetitions)
 {
 	// Opens file
 	FILE *file = fopen(path, "r");
@@ -45,7 +45,8 @@ int readWords(const char *path, TSTNode **root)
 
 		// Inserts in TST
 		const char newline[2] = "\n";
-		insertTST(root, strtok(line, newline));
+		char *word = strtok(line, newline);
+		insertTST(root, word, nbRepetitions);
 
 		// Increments counter
 		counter++;
@@ -138,146 +139,6 @@ int readScores(const char *path, int **scores)
 	}
 
 	return counter;
-}
-
-int indexOf(ScoredLetter *array, ScoredLetter letter)
-{
-	for (int i = 0; array[i].letter != '\0'; i++)
-	{
-		if (array[i].letter == letter.letter && array[i].score == letter.score)
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
-
-ScoredLetter *removeElementAt(ScoredLetter *array, int index)
-{
-	int size = 0;
-	for (size = 0; array[size].letter != '\0'; size++)
-		;
-
-	ScoredLetter *result = malloc((size + 1) * sizeof(ScoredLetter));
-
-	// If malloc fails
-	if (result == NULL)
-	{
-		fprintf(stderr,
-				"ERROR: Could not reallocate memory for the scores.\n");
-		exit(-1);
-	}
-
-	int j = 0;
-	for (int i = 0; i < size + 1; i++)
-	{
-		if (i != index)
-		{
-			result[j++] = array[i];
-		}
-	}
-
-	return result;
-}
-
-ScoredLetter *removeElements(ScoredLetter *array, ScoredLetter *letters)
-{
-	ScoredLetter *result = array;
-
-	for (int i = 0; letters[i].letter != '\0'; i++)
-	{
-		int index = indexOf(array, letters[i]);
-		if (index != -1)
-		{
-			result = removeElementAt(result, index);
-		}
-	}
-
-	return result;
-}
-
-int valueSolutions(ScoredLetter ***solutions)
-{
-	int score = 0;
-	for (int j = 0; solutions[0][j]; j++)
-	{
-		score += value(solutions[0][j]);
-	}
-	return score;
-}
-
-void printSolutions(ScoredLetter ***solutions)
-{
-	if (!solutions)
-	{
-		printf("[] : 0\n");
-		return;
-	}
-
-	int score = 0;
-	printf("[ ");
-
-	for (int i = 0; solutions[i]; i++)
-	{
-		if (i != 0)
-		{
-			printf(" ");
-		}
-		printf("[ ");
-
-		for (int j = 0; solutions[i][j]; j++)
-		{
-			if (i == 0)
-			{
-				score += value(solutions[i][j]);
-			}
-			if (j != 0 && solutions[i][j][0].letter != '\0')
-			{
-				printf(" ");
-			}
-			print(solutions[i][j]);
-		}
-
-		printf(" ]");
-	}
-
-	printf(" ] : %d\n", score);
-}
-
-ScoredLetter ***copySolutions(ScoredLetter ***solutions)
-{
-	ScoredLetter ***copy;
-	int nbSolutions;
-	for (nbSolutions = 0; solutions[nbSolutions]; nbSolutions++)
-		;
-
-	copy = malloc((nbSolutions + 1) * sizeof(ScoredLetter **));
-	for (int i = 0; i < nbSolutions; i++)
-	{
-		int nbWords;
-		for (nbWords = 0; solutions[i][nbWords]; nbWords++)
-			;
-
-		copy[i] = malloc((nbWords + 1) * sizeof(ScoredLetter *));
-		for (int j = 0; j < nbWords; j++)
-		{
-			int nbLetters;
-			for (nbLetters = 0; solutions[i][j][nbLetters].letter != '\0'; nbLetters++)
-				;
-
-			copy[i][j] = malloc((nbLetters + 1) * sizeof(ScoredLetter));
-			for (int k = 0; k < nbLetters; k++)
-			{
-				copy[i][j][k] = solutions[i][j][k];
-			}
-			copy[i][j][nbLetters] = NULLLETTER;
-		}
-		copy[i][nbWords] = NULL;
-	}
-	copy[nbSolutions] = NULL;
-
-	return copy;
 }
 
 void addFirst(ScoredLetter ***solutions, ScoredLetter letter)
@@ -447,7 +308,6 @@ ScoredLetter ***solverAux(TSTNode *dict, TSTNode *root, ScoredLetter *letters, i
 
 				if (tmp < bestScore)
 				{
-					//* HERE
 					ScoredLetter *subLetters = NULL;
 
 					// subLetters = removeElements(letters, &currentScoredLetter);
@@ -516,15 +376,15 @@ ScoredLetter ***solverAux(TSTNode *dict, TSTNode *root, ScoredLetter *letters, i
 
 							addFirst(solutions, currentScoredLetter);
 
-							bestSolutions = valueSolutions(solutions);
+							bestSolutions = scoreOfSolutions(solutions);
 						}
-						else if (bestSolutions < valueSolutions(auxSolutions))
+						else if (bestSolutions < scoreOfSolutions(auxSolutions))
 						{
 							solutions = copySolutions(auxSolutions);
 
 							addFirst(solutions, currentScoredLetter);
 
-							bestSolutions = valueSolutions(solutions);
+							bestSolutions = scoreOfSolutions(solutions);
 						}
 
 						// for (int k = 0; k < depth; k++)
@@ -590,15 +450,15 @@ ScoredLetter ***solverAux(TSTNode *dict, TSTNode *root, ScoredLetter *letters, i
 	// 	printf("\t");
 	// }
 	// printf("After Loop => %d\n", bestScore);
-	// if (solutions)
-	// {
-	// 	for (int k = 0; k < depth; k++)
-	// 	{
-	// 		printf("\t");
-	// 	}
-	// 	printf("§ ");
-	// 	printSolutions(solutions);
-	// }
+	if (solutions)
+	{
+		for (int k = 0; k < depth; k++)
+		{
+			printf("\t");
+		}
+		printf("§ ");
+		displaySolutions(solutions);
+	}
 
 	return solutions;
 }
@@ -609,7 +469,7 @@ void solver(TSTNode *dict, ScoredLetter *letters)
 	// ScoredLetter *result = solverAux(dict, nbLetters, letters, 0);
 	ScoredLetter ***solutions = solverAux(dict, dict, letters, 0);
 
-	printSolutions(solutions);
+	displaySolutions(solutions);
 	// printf("Score = %d\n", value(result, ));
 	// printf("=> '%s'", result);
 }
@@ -619,7 +479,7 @@ int main(int argc, char const *argv[])
 	//
 	// Arguments parsing
 	//
-	if (argc != 4)
+	if (argc != 4 && argc != 5)
 	{
 		fprintf(stderr, "ERROR: Wrong number of arguments.\n");
 		exit(-1);
@@ -629,9 +489,21 @@ int main(int argc, char const *argv[])
 	const char *pathToLetters = argv[2];
 	const char *pathToScores = argv[3];
 
+	int nbRepetitions = 1;
+
+	if (argc == 5)
+	{
+		int n = atoi(argv[4]);
+		if (n <= 0)
+		{
+			fprintf(stderr, "ERROR: The number of repetitions must be greater than zero.\n");
+			exit(-1);
+		}
+	}
+
 	// Reads words
 	TSTNode *dict = NULL;
-	readWords(pathToWords, &dict);
+	readWords(pathToWords, &dict, nbRepetitions);
 	// int nbWords = readWords(pathToWords, &dict);
 	// printf("%zu words found\n", nbWords);
 
@@ -678,7 +550,7 @@ int main(int argc, char const *argv[])
 	// printf("LETTERS AFTER : \n");
 	// for (int i = 0; i < nbLetters; i++)
 	// {
-	// 	printf("[%c - %d]", scoredLetters[i].letter, scoredLetters[i].score);
+	// 	printf("[%c : %d]", scoredLetters[i].letter, scoredLetters[i].score);
 	// }
 	// printf("\n");
 

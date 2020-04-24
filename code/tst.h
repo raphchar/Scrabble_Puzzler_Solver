@@ -31,8 +31,9 @@ struct TSTNode *newNode(char letter);
  *
  * root: A pointer to the root node of the TST
  * word: A string representing the word to insert
+ * n: An integer representing the number of time a word can be used
  */
-void insertTST(struct TSTNode **root, char *word);
+void insertTST(struct TSTNode **root, char *word, int n);
 
 /**
  * Searches a given word in a given TST

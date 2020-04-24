@@ -7,6 +7,9 @@
 #define NULLLETTER newScoredLetter('\0', 0);
 
 typedef struct ScoredLetter ScoredLetter;
+typedef struct ScoredLetter *ScoredString;
+typedef struct ScoredLetter **Solution;
+typedef struct ScoredLetter ***ListOfSolution;
 
 struct ScoredLetter
 {
@@ -19,8 +22,39 @@ struct ScoredLetter
  */
 struct ScoredLetter newScoredLetter(char letter, int score);
 
-void print(ScoredLetter *scoredLetters);
+/**
+ * Finds the index of the letter in the array
+ */
+int indexOf(ScoredString array, ScoredLetter letter);
 
-int value(ScoredLetter *scoredLetters);
+/**
+ * Removes the ith element of the array
+ */
+ScoredString removeElementAt(ScoredString array, int index);
+
+/**
+ * Removes all the given letters from the array
+ */
+ScoredString removeElements(ScoredString array, ScoredString letters);
+
+/**
+ * Computes the score associated to the given ScoredString
+ */
+int scoreOfString(ScoredString scoredLetters);
+
+/**
+ * Computes the score associated to one of the solutions
+ */
+int scoreOfSolutions(ListOfSolution solutions);
+
+/**
+ * Prints the solutions in the structured output format
+ */
+void displaySolutions(ListOfSolution solutions);
+
+/**
+ * Returns a deep copy of the given ListOfSolution
+ */
+ListOfSolution copySolutions(ListOfSolution solutions);
 
 #endif // SCORED_LETTER_H

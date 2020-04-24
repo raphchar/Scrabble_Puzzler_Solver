@@ -11,7 +11,7 @@ struct TSTNode *newNode(char letter)
     return node;
 }
 
-void insertTST(struct TSTNode **root, char *word)
+void insertTST(struct TSTNode **root, char *word, int n)
 {
     // If root is null, the subtree is empty
     if (!(*root))
@@ -24,13 +24,13 @@ void insertTST(struct TSTNode **root, char *word)
     if (*word < (*root)->letter)
     {
         // Inserts in the left child
-        insertTST(&(*root)->left, word);
+        insertTST(&(*root)->left, word, n);
     }
     // If fist character of word is greater than the root's character
     else if (*word > (*root)->letter)
     {
         // Inserts in the right child
-        insertTST(&(*root)->right, word);
+        insertTST(&(*root)->right, word, n);
     }
     else
     {
@@ -38,12 +38,12 @@ void insertTST(struct TSTNode **root, char *word)
         if (*(word + 1) == '\0')
         {
             // Sets end of word
-            (*root)->endOfWord += 1;
+            (*root)->endOfWord += n;
         }
         else
         {
             // Inserts in the middle child
-            insertTST(&(*root)->middle, word + 1);
+            insertTST(&(*root)->middle, word + 1, n);
         }
     }
 }
