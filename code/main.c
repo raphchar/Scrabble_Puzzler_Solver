@@ -253,37 +253,10 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 	// Score of the best solution found so far
 	int bestScoreSolutions = 0;
 
-	// Score of the best letter found so far
-	// int bestScoreLetter = 0;
-
-	for (int k = 0; k < depth; k++)
-	{
-		printf("\t");
-	}
-	printf("Before Loop : ");
-	for (int i = 0; letters[i].letter != '\0'; i++)
-	{
-		printf("%c", letters[i].letter);
-	}
-
-	if (dict)
-	{
-		printf("\t|\tRoot : %c\n", dict->letter);
-	}
-	else
-	{
-		printf("\t|\tRoot : NULL\n");
-	}
-
 	// Loops every letters
 	for (int i = 0; letters[i].letter != '\0'; i++)
 	{
 		ScoredLetter currentScoredLetter = letters[i];
-		for (int k = 0; k < depth; k++)
-		{
-			printf("\t");
-		}
-		printf("CURRENT LETTER : %c\n", currentScoredLetter.letter);
 
 		char currentLetter[2];
 		currentLetter[0] = currentScoredLetter.letter;
@@ -294,11 +267,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 		// If there is a hit for that letter
 		if (currentNode)
 		{
-			// for (int k = 0; k < depth; k++)
-			// {
-			// 	printf("\t");
-			// }
-			// printf("(%d)\n", currentNode->endOfWord);
 			// End of a word
 			if (currentNode->endOfWord)
 			{
@@ -308,24 +276,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 
 				// Reove the current letter from the available letters
 				subLetters = removeElementAt(letters, i);
-
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				printf("############################# > \n");
-
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				displaySolutions(solutions);
-
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				printf("############################# > \n");
 
 				// Calls itself recursively
 				// from the root of the tree with rhe remaining letters
@@ -337,26 +287,13 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				int subScore = scoreOfSolutions(subSolutions);
 				int score = currentScoredLetter.score + subScore;
 
-				printf("%d + %d\n", subScore, currentScoredLetter.score);
-				printf("%d VS %d\n", bestScoreSolutions, score);
-
 				if (bestScoreSolutions <= score)
 				{
 					bestScoreSolutions = score;
 
-					// Sets best score with the current letter's score
-					// bestScoreLetter = currentScoredLetter.score;
-
-					// Adds the letter to a new word in a new solution
-					// nbSolutions = 1;
+					// Adds the letter to a new word in the solution
 					nbSolutions = nbSolutions ? nbSolutions : 1;
-					// solutions = malloc((++nbSolutions) * sizeof(Solution));
-					// solutions[0] = malloc(2 * sizeof(ScoredString));
-					// solutions[0][0] = malloc(2 * sizeof(ScoredLetter));
-					// solutions[0][0][0] = currentScoredLetter;
-					// solutions[0][0][1] = NULLLETTER;
-					// solutions[0][1] = NULL;
-					// solutions[1] = NULL;
+
 					int size = ++nbSolutions;
 					solutions = realloc(solutions, size * sizeof(Solution));
 					solutions[size - 2] = malloc(2 * sizeof(ScoredString));
@@ -375,145 +312,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 						solutions = solutions;
 					}
 				}
-
-				// free(subsubLetters);
-				// free(subLetters);
-
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				printf(" < #############################\n");
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				displaySolutions(solutions);
-				for (int k = 0; k < depth; k++)
-				{
-					printf("\t");
-				}
-				printf(" < #############################\n");
-				// int tmp = bestScoreLetter;
-
-				// // If there is not yet a list of solutions
-				// if (!solutions)
-				// {
-				// 	printf("\t\t\t\tEND OF WORD\n");
-
-				// 	// Decrement repetitions counter
-				// 	currentNode->endOfWord -= 1;
-
-				// 	// Sets best score with the current letter's score
-				// 	bestScoreLetter = currentScoredLetter.score;
-
-				// 	// Adds the letter to a new word in a new solution
-				// 	nbSolutions = 1;
-				// 	solutions = malloc((++nbSolutions) * sizeof(Solution));
-				// 	solutions[0] = malloc(2 * sizeof(ScoredString));
-				// 	solutions[0][0] = malloc(2 * sizeof(ScoredLetter));
-				// 	solutions[0][0][0] = currentScoredLetter;
-				// 	solutions[0][0][1] = NULLLETTER;
-				// 	solutions[0][1] = NULL;
-				// 	solutions[1] = NULL;
-				// }
-				// // If the current letter has a greater score
-				// else if (bestScoreLetter < currentScoredLetter.score)
-				// {
-				// 	printf("\t\t\t\tEND OF WORD\n");
-
-				// 	// Decrement repetitions counter
-				// 	currentNode->endOfWord -= 1;
-
-				// 	// Sets best score with the current letter's score
-				// 	bestScoreLetter = currentScoredLetter.score;
-
-				// 	// Replaces the letter in the first solution's first word
-				// 	solutions[0][0][0] = currentScoredLetter;
-				// }
-				// // If the letter is equally interresting
-				// else if (bestScoreLetter == currentScoredLetter.score)
-				// {
-				// 	// printf("\t\t\t\tEND OF WORD\n");
-				// 	// printf("%d VS %d\n", bestScoreLetter, currentScoredLetter.score);
-
-				// 	// // Decrement repetitions counter
-				// 	// currentNode->endOfWord -= 1;
-
-				// 	// // Adds the letter to a new word in a new solution
-				// 	// int size = ++nbSolutions;
-				// 	// solutions = realloc(solutions, size * sizeof(Solution));
-				// 	// solutions[size - 2] = malloc(2 * sizeof(ScoredString));
-				// 	// solutions[size - 2][0] = malloc(2 * sizeof(ScoredLetter));
-				// 	// solutions[size - 2][0][0] = currentScoredLetter;
-				// 	// solutions[size - 2][0][1] = NULLLETTER;
-				// 	// solutions[size - 2][1] = NULL;
-				// 	// solutions[size - 1] = NULL;
-				// }
-
-				// printf(">>> %d\n", bestScoreSolutions);
-
-				// if (tmp <= bestScoreLetter)
-				// {
-				// 	ScoredString subLetters = NULL;
-
-				// 	// Reove the current letter from the available letters
-				// 	subLetters = removeElementAt(letters, i);
-
-				// 	// for (int k = 0; k < depth; k++)
-				// 	// {
-				// 	// 	printf("\t");
-				// 	// }
-				// 	// printf("Remaining Letters [");
-				// 	// (subLetters);
-				// 	// printf("]\n");
-
-				// 	for (int k = 0; k < depth; k++)
-				// 	{
-				// 		printf("\t");
-				// 	}
-				// 	printf("############################# > \n");
-
-				// 	// Calls itself recursively
-				// 	// from the root of the tree with rhe remaining letters
-				// 	ListOfSolution subSolutions = solverAux(root,
-				// 											root,
-				// 											subLetters,
-				// 											depth + 1);
-
-				// 	// If there is a result from the recursive call
-				// 	if (subSolutions)
-				// 	{
-				// 		int subScore = scoreOfSolutions(subSolutions);
-
-				// 		printf("%d VS %d\n", bestScoreSolutions, subScore);
-
-				// 		if (bestScoreSolutions < subScore)
-				// 		{
-				// 			bestScoreSolutions = subScore;
-				// 			solutions = mergeSolutions(solutions, subSolutions);
-				// 		}
-				// 		// printSolutions(solutions);
-				// 		// printf(" x ");
-				// 		// printSolutions(subSolutions);
-				// 		// printf(" = ");
-				// 		// printSolutions(mergeSolutions(solutions, subSolutions, j));
-
-				// 		// Merges the list of solutions
-				// 		// with the recursive call's result
-				// 	}
-
-					// displaySolutions(solutions);
-
-				// 	// free(subsubLetters);
-				// 	// free(subLetters);
-
-					// for (int k = 0; k < depth; k++)
-					// {
-					// 	printf("\t");
-					// }
-					// printf(" < #############################\n");
-				// }
 			}
 			// Not end of word
 			else
@@ -539,26 +337,12 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 							;
 						nbSolutions++;
 
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("=> ");
-						// printSolutions(auxSolutions);
-
 						int recursiveScore = currentScoredLetter.score +
 											 scoreOfSolutions(auxSolutions);
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf(">>> (NEW) %d VS (OLD) %d\n", recursiveScore, bestScoreSolutions);
 
 						if (!solutions)
 						{
 							solutions = copySolutions(auxSolutions);
-							// solutions = auxSolutions;
 
 							addFirst(solutions, currentScoredLetter);
 
@@ -567,25 +351,11 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 						else if (bestScoreSolutions < recursiveScore)
 						{
 							solutions = copySolutions(auxSolutions);
-							// solutions = auxSolutions;
 
 							addFirst(solutions, currentScoredLetter);
 
 							bestScoreSolutions = scoreOfSolutions(solutions);
 						}
-
-						// for (nbSolutions = 0;
-						// 	 solutions[nbSolutions];
-						// 	 nbSolutions++)
-						// 	;
-						// nbSolutions++;
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("# %d => ", nbSolutions);
-						// printSolutions(solutions);
 
 						// If the recursive call found a solution
 						// with a zero score, adds the empty word
@@ -600,61 +370,10 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 							solutions[size - 2][1] = NULL;
 							solutions[size - 1] = NULL;
 						}
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("# %d => ", nbSolutions);
-						// printSolutions(solutions);
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("# ");
-						// printSolutions(auxSolutions);
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("# ");
-						// printSolutions(solutions);
-
-						// for (int j = 0; auxSolutions[j]; j++)
-						// {
-
-						// }
-
-						// for (int k = 0; k < depth; k++)
-						// {
-						// 	printf("\t");
-						// }
-						// printf("@ ");
-						// displaySolutions(solutions);
 					}
-
-					// free(subLetters);
 				}
 			}
 		}
-		printf("---------------------------------------------------------------------------------------\n");
-	}
-
-	// for (int k = 0; k < depth; k++)
-	// {
-	// 	printf("\t");
-	// }
-	// printf("After Loop => %d\n", bestScore);
-	if (solutions)
-	{
-		for (int k = 0; k < depth; k++)
-		{
-			printf("\t");
-		}
-		printf("§ ");
-		displaySolutions(solutions);
 	}
 
 	return solutions;
@@ -663,8 +382,6 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 void solver(TSTNode *dict, ScoredString letters)
 {
 	ListOfSolution solutions = solverAux(dict, dict, letters, 0);
-
-	// printf(">>>");
 
 	displaySolutions(solutions);
 }
@@ -727,26 +444,12 @@ int main(int argc, char const *argv[])
 	free(scores);
 	free(letters);
 
-	// printf("LETTERS BEFORE : \n");
-	// for (int i = 0; i < nbLetters; i++)
-	// {
-	// 	printf("[%c : %d]", scoredLetters[i].letter, scoredLetters[i].score);
-	// }
-	// printf("\n");
-
 	// Sorts the letter according to the scores
 	quicksort(scoredLetters, 0, nbLetters - 1);
 
 	scoredLetters = realloc(scoredLetters,
 							(++nbLetters) * sizeof(ScoredLetter));
 	scoredLetters[nbLetters - 1] = NULLLETTER;
-
-	// printf("LETTERS AFTER : \n");
-	// for (int i = 0; i < nbLetters; i++)
-	// {
-	// 	printf("[%c : %d]", scoredLetters[i].letter, scoredLetters[i].score);
-	// }
-	// printf("\n");
 
 	// Solves
 	solver(dict, scoredLetters);
