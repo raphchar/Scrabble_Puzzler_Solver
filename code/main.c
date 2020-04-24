@@ -242,7 +242,7 @@ ListOfSolution mergeSolutions(ListOfSolution a,
 	return result;
 }
 
-ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int depth)
+ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters)
 {
 	// Returned variable
 	ListOfSolution solutions = NULL;
@@ -281,8 +281,7 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				// from the root of the tree with rhe remaining letters
 				ListOfSolution subSolutions = solverAux(root,
 														root,
-														subLetters,
-														depth + 1);
+														subLetters);
 
 				ScoredString emptyWord = malloc(sizeof(ScoredLetter));
 				emptyWord[0] = NULLLETTER;
@@ -348,8 +347,7 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 					// from the middle'ssubtree with rhe remaining letters
 					ListOfSolution auxSolutions = solverAux(subDict,
 															root,
-															subLetters,
-															depth + 1);
+															subLetters);
 
 					// If there is a result from the recursive call
 					if (auxSolutions)
@@ -403,7 +401,7 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 
 void solver(TSTNode *dict, ScoredString letters)
 {
-	ListOfSolution solutions = solverAux(dict, dict, letters, 0);
+	ListOfSolution solutions = solverAux(dict, dict, letters);
 
 	displaySolutions(solutions);
 }
