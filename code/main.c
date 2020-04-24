@@ -287,10 +287,8 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				int subScore = scoreOfSolutions(subSolutions);
 				int score = currentScoredLetter.score + subScore;
 
-
 				if (bestScoreSolutions <= score)
 				{
-
 
 					// Adds the letter to a new word in the solution
 					if (bestScoreSolutions < score)
@@ -382,6 +380,16 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				}
 			}
 		}
+	}
+
+	if (solutions)
+	{
+		for (int k = 0; k < depth; k++)
+		{
+			printf("\t");
+		}
+		printf("§ ");
+		displaySolutions(solutions);
 	}
 
 	return solutions;
