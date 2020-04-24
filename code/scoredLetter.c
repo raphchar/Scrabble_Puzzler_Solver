@@ -1,8 +1,8 @@
 #include "scoredLetter.h"
 
-struct ScoredLetter newScoredLetter(char letter, int score)
+ScoredLetter newScoredLetter(char letter, int score)
 {
-    struct ScoredLetter *newElement = malloc(sizeof(struct ScoredLetter));
+    ScoredLetter *newElement = malloc(sizeof(ScoredLetter));
     newElement->letter = letter;
     newElement->score = score;
     return *newElement;
@@ -161,7 +161,9 @@ ListOfSolution copySolutions(ListOfSolution solutions)
         {
             // Allocate letters
             int nbLetters;
-            for (nbLetters = 0; solutions[i][j][nbLetters].letter != '\0'; nbLetters++)
+            for (nbLetters = 0;
+                 solutions[i][j][nbLetters].letter != '\0';
+                 nbLetters++)
                 ;
 
             copy[i][j] = malloc((nbLetters + 1) * sizeof(ScoredLetter));

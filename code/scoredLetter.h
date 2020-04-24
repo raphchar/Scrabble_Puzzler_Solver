@@ -4,12 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * Special ScoredLetter that will act as an end guard in ScoredString.
+ *
+ * Usage similar to '\0' in regular string.
+ */
 #define NULLLETTER newScoredLetter('\0', 0);
 
 typedef struct ScoredLetter ScoredLetter;
-typedef struct ScoredLetter *ScoredString;
-typedef struct ScoredLetter **Solution;
-typedef struct ScoredLetter ***ListOfSolution;
+typedef ScoredLetter *ScoredString;
+typedef ScoredLetter **Solution;
+typedef ScoredLetter ***ListOfSolution;
 
 struct ScoredLetter
 {
@@ -20,7 +25,7 @@ struct ScoredLetter
 /**
  * Creates a new ScoredLetter
  */
-struct ScoredLetter newScoredLetter(char letter, int score);
+ScoredLetter newScoredLetter(char letter, int score);
 
 /**
  * Finds the index of the letter in the array
