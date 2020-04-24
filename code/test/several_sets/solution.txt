@@ -1,1 +1,1 @@
-[[ab ac] [ab ad]] : 20
+[ [ ab ac ] [ ab ad ] ] : 20
