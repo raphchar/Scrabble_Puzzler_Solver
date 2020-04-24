@@ -62,4 +62,14 @@ void displaySolutions(ListOfSolution solutions);
  */
 ListOfSolution copySolutions(ListOfSolution solutions);
 
+/**
+ * Free the given Solution
+ */
+void freeSolution(Solution solution);
+
+/**
+ * Free the given ListOfSolution
+ */
+void freeSolutions(ListOfSolution solutions);
+
 #endif // SCORED_LETTER_H

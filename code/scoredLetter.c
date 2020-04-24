@@ -186,3 +186,21 @@ ListOfSolution copySolutions(ListOfSolution solutions)
 
     return copy;
 }
+
+void freeSolution(Solution solution)
+{
+    for (int i = 0; solution[i]; i++)
+    {
+        free(solution[i]);
+    }
+    free(solution);
+}
+
+void freeSolutions(ListOfSolution solutions)
+{
+    for (int i = 0; solutions[i]; i++)
+    {
+        free(solutions[i]);
+    }
+    free(solutions);
+}
