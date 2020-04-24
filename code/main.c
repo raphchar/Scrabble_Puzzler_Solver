@@ -287,11 +287,19 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				int subScore = scoreOfSolutions(subSolutions);
 				int score = currentScoredLetter.score + subScore;
 
+
 				if (bestScoreSolutions <= score)
 				{
-					bestScoreSolutions = score;
+
 
 					// Adds the letter to a new word in the solution
+					if (bestScoreSolutions < score)
+					{
+						bestScoreSolutions = score;
+						nbSolutions = 0;
+						solutions = NULL;
+					}
+
 					nbSolutions = nbSolutions ? nbSolutions : 1;
 
 					int size = ++nbSolutions;
