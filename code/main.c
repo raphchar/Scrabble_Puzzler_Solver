@@ -251,12 +251,18 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 	int nbSolutions = 0;
 
 	// Score of the best solution found so far
-	int bestScoreSolutions = 0;
+	int bestScoreSolutions = -999;
 
 	// Loops every letters
 	for (int i = 0; letters[i].letter != '\0'; i++)
 	{
 		ScoredLetter currentScoredLetter = letters[i];
+
+		// for (int k = 0; k < depth; k++)
+		// {
+		// 	printf("\t");
+		// }
+		// printf("CURREN LETTER : %c\n", currentScoredLetter.letter);
 
 		char currentLetter[2];
 		currentLetter[0] = currentScoredLetter.letter;
@@ -284,8 +290,44 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 														subLetters,
 														depth + 1);
 
+				ScoredString emptyWord = malloc(sizeof(ScoredLetter));
+				emptyWord[0] = NULLLETTER;
+
+				Solution emptySolution = malloc(2 * sizeof(ScoredString));
+				emptySolution[0] = emptyWord;
+				emptySolution[1] = NULL;
+
+				ListOfSolution emptyList = malloc(2 * sizeof(Solution));
+				emptyList[0] = emptySolution;
+				emptyList[1] = NULL;
+
+				// if (subSolutions)
+				// {
+				// 	displaySolutions(subSolutions);
+				// 	for (int j = 0; subSolutions[j]; j++)
+				// 	{
+				// 		subSolutions[j] = concatenate(subSolutions[j], emptySolution);
+				// 	}
+				// 	displaySolutions(subSolutions);
+				// }
+				// else
+				// {
+				// 	subSolutions = emptySolution;
+				// }
+
 				int subScore = scoreOfSolutions(subSolutions);
 				int score = currentScoredLetter.score + subScore;
+
+				if (score < 0)
+				{
+					subSolutions = emptyList;
+				}
+
+				// for (int k = 0; k < depth; k++)
+				// {
+				// 	printf("\t");
+				// }
+				// printf("%d <= %d\n", bestScoreSolutions, score);
 
 				if (bestScoreSolutions <= score)
 				{
@@ -380,17 +422,18 @@ ListOfSolution solverAux(TSTNode *dict, TSTNode *root, ScoredString letters, int
 				}
 			}
 		}
+		// printf("-----------------------------------------------------------\n");
 	}
 
-	if (solutions)
-	{
-		for (int k = 0; k < depth; k++)
-		{
-			printf("\t");
-		}
-		printf("§ ");
-		displaySolutions(solutions);
-	}
+	// if (solutions)
+	// {
+	// 	for (int k = 0; k < depth; k++)
+	// 	{
+	// 		printf("\t");
+	// 	}
+	// 	printf("§ ");
+	// 	displaySolutions(solutions);
+	// }
 
 	return solutions;
 }
