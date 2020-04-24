@@ -1,6 +1,13 @@
+/**
+ * tst.c
+ *
+ * Implémentaion of a Ternary Search Tree
+ *
+ */
+
 #include "tst.h"
 
-struct TSTNode *newNode(char letter)
+TSTNode *newNode(char letter)
 {
     struct TSTNode *node = malloc(sizeof(struct TSTNode));
     node->letter = letter;
@@ -11,7 +18,7 @@ struct TSTNode *newNode(char letter)
     return node;
 }
 
-void insertTST(struct TSTNode **root, char *word, int n)
+void insertTST(TSTNode **root, char *word, int n)
 {
     // If root is null, the subtree is empty
     if (!(*root))
@@ -48,7 +55,7 @@ void insertTST(struct TSTNode **root, char *word, int n)
     }
 }
 
-struct TSTNode *searchTST(struct TSTNode *root, char *word)
+TSTNode *searchTST(TSTNode *root, char *word)
 {
     // If root is NULL, the subtree is empty
     if (!root)

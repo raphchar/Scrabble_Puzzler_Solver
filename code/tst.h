@@ -1,3 +1,10 @@
+/**
+ * tst.h
+ *
+ * Header of the implémentaion of a Ternary Search Tree
+ *
+ */
+
 #ifndef TST_H
 #define TST_H
 
@@ -12,9 +19,9 @@ struct TSTNode
 {
     char letter;
     unsigned endOfWord;
-    struct TSTNode *left;
-    struct TSTNode *middle;
-    struct TSTNode *right;
+    TSTNode *left;
+    TSTNode *middle;
+    TSTNode *right;
 };
 
 /**
@@ -24,7 +31,7 @@ struct TSTNode
  *
  * return: A pointer to the new node
  */
-struct TSTNode *newNode(char letter);
+TSTNode *newNode(char letter);
 
 /**
  * Inserts a word in the TST
@@ -33,7 +40,7 @@ struct TSTNode *newNode(char letter);
  * word: A string representing the word to insert
  * n: An integer representing the number of time a word can be used
  */
-void insertTST(struct TSTNode **root, char *word, int n);
+void insertTST(TSTNode **root, char *word, int n);
 
 /**
  * Searches a given word in a given TST
@@ -44,6 +51,6 @@ void insertTST(struct TSTNode **root, char *word, int n);
  * return: A pointer to the node at the end of the word
  * or NULL is the word is not in the TST
  */
-struct TSTNode *searchTST(struct TSTNode *root, char *word);
+TSTNode *searchTST(TSTNode *root, char *word);
 
 #endif // TST_H
